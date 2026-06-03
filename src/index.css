@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 @theme{
-  --font-heading: "Poppins" sans-serif;
-  --font-para:"__Poppins_f2c6a8";
-  --color-primary:#0052CC;
-  --color-sec:#1f1a48;
-  --color-para:#654A55;
+  --font-heading: "Sora", sans-serif;
+  --font-para: "Manrope", sans-serif;
+  --color-primary: #2563eb;
+  --color-sec: #0f172a;
+  --color-para: #475569;
+  --color-accent: #f97316;
 }
 
 html {
@@ -13,6 +14,425 @@ html {
 }
 
 :root {
-  font-family: sans-serif;
+  font-family: var(--font-para);
   line-height: 1.5;
+  color: #0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 24%),
+    linear-gradient(180deg, #f7f9fc 0%, #ecf3ff 45%, #f8fafc 100%);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: transparent;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.course-carousel-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.course-carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 0.9rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  scrollbar-width: none;
+  padding: 0.35rem 0 1rem;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  contain: layout paint;
+  will-change: scroll-position;
+}
+
+.course-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.course-carousel-slide {
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  contain: layout paint;
+}
+
+.course-carousel-button {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 219, 254, 0.95);
+  background: rgba(255, 255, 255, 0.96);
+  color: #1d4ed8;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14);
+  transform: translateY(-50%);
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.18s ease,
+    color 0.18s ease,
+    opacity 0.18s ease;
+  will-change: transform;
+}
+
+.course-carousel-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.course-carousel-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.36;
+}
+
+.course-carousel-button-prev {
+  left: -0.75rem;
+}
+
+.course-carousel-button-next {
+  right: -0.75rem;
+}
+
+@media (min-width: 768px) {
+  .course-carousel-track {
+    grid-auto-columns: calc((100% - 0.9rem) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .course-carousel-track {
+    grid-auto-columns: calc((100% - 1.8rem) / 3);
+  }
+}
+
+@media (max-width: 640px) {
+  .course-carousel-button {
+    height: 2.35rem;
+    width: 2.35rem;
+  }
+
+  .course-carousel-button-prev {
+    left: -0.25rem;
+  }
+
+  .course-carousel-button-next {
+    right: -0.25rem;
+  }
+}
+
+.admin-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-shell button,
+.admin-shell a,
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+}
+
+.hero-tech-node {
+  animation: heroNodeFloat 9s ease-in-out infinite;
+  will-change: transform;
+}
+
+.hero-tech-chip {
+  animation: heroNodeRotate 18s linear infinite;
+}
+
+.hero-orbit-core {
+  animation: heroCorePulse 7s ease-in-out infinite;
+}
+
+.hero-orbit-ring {
+  animation: heroRingRotate 20s linear infinite;
+}
+
+.hero-code-particle {
+  width: 4px;
+  height: 4px;
+  animation: heroParticleFloat 5.8s ease-in-out infinite;
+}
+
+.benefits-track {
+  animation: benefitsMarquee 26s linear infinite;
+  will-change: transform;
+}
+
+.benefits-marquee:hover .benefits-track {
+  animation-play-state: paused;
+}
+
+.benefits-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.benefits-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(34, 211, 238, 0.42);
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 22px 60px rgba(15, 23, 42, 0.14),
+    0 0 0 1px rgba(34, 211, 238, 0.14),
+    0 0 28px rgba(34, 211, 238, 0.12);
+}
+
+.about-marquee,
+.review-marquee {
+  position: relative;
+  overflow: hidden;
+  padding-block: 0.35rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.about-marquee-track,
+.review-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.about-marquee-track {
+  animation: aboutMarqueeLeft 34s linear infinite;
+}
+
+.review-marquee-track {
+  animation: reviewMarqueeLeft 42s linear infinite;
+}
+
+.review-marquee-track-reverse {
+  animation-name: reviewMarqueeRight;
+}
+
+.about-marquee:hover .about-marquee-track,
+.review-marquee:hover .review-marquee-track {
+  animation-play-state: paused;
+}
+
+.about-marquee-card,
+.review-marquee-card {
+  display: block;
+  flex: 0 0 auto;
+  border: 1px solid rgba(226, 232, 240, 0.86);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72)),
+    rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(18px);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.32s ease,
+    border-color 0.32s ease,
+    background-color 0.32s ease;
+}
+
+.about-marquee-card {
+  min-height: 15rem;
+  width: min(82vw, 20.5rem);
+  border-radius: 1.5rem;
+  padding: 1.45rem;
+}
+
+.review-marquee-card {
+  cursor: pointer;
+  min-height: 18.75rem;
+  width: min(86vw, 24rem);
+  border-radius: 1.5rem;
+  padding: 1.45rem;
+}
+
+.about-marquee-card:hover,
+.review-marquee-card:hover {
+  transform: translate3d(0, -8px, 0) scale(1.025);
+  border-color: rgba(37, 99, 235, 0.36);
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(37, 99, 235, 0.1),
+    0 0 34px rgba(37, 99, 235, 0.12);
+}
+
+.review-text-fade {
+  display: -webkit-box;
+  min-height: 5.25rem;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  mask-image: linear-gradient(180deg, #000 68%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent 100%);
+}
+
+.review-marquee-card:hover .review-text-fade {
+  -webkit-line-clamp: 4;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+@keyframes heroNodeFloat {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes heroNodeRotate {
+  0%, 100% {
+    rotate: -1.4deg;
+  }
+  50% {
+    rotate: 1.4deg;
+  }
+}
+
+@keyframes heroCorePulse {
+  0%, 100% {
+    scale: 1;
+    opacity: 0.72;
+  }
+  50% {
+    scale: 1.08;
+    opacity: 1;
+  }
+}
+
+@keyframes heroRingRotate {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes heroParticleFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+    opacity: 0.8;
+  }
+}
+
+@keyframes benefitsMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 0.5rem));
+  }
+}
+
+@keyframes aboutMarqueeLeft {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
+  }
+}
+
+@keyframes reviewMarqueeLeft {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
+  }
+}
+
+@keyframes reviewMarqueeRight {
+  from {
+    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  .benefits-track {
+    animation-duration: 34s;
+  }
+
+  .about-marquee,
+  .review-marquee {
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .about-marquee-track {
+    animation-duration: 42s;
+  }
+
+  .review-marquee-track {
+    animation-duration: 52s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee-track,
+  .review-marquee-track,
+  .benefits-track,
+  .hero-tech-node,
+  .hero-tech-chip,
+  .hero-orbit-core,
+  .hero-orbit-ring,
+  .hero-code-particle {
+    animation: none;
+  }
+
+  .about-marquee,
+  .review-marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }

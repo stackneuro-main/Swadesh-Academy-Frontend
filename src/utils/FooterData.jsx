@@ -2,11 +2,7 @@ export const branchAddresses = [
   {
     city: "Rourkela",
     address: "D - 47, Co-operative Colony, Kalinga Vihar, Chhend, Rourkela, Odisha - 769015",
-  },
-  {
-    city: "Angul",
-    address:
-      "Sabalbhanga, PO - Kumurisingha, Angul-Bantala Road, near Abhiram Temple / Pentecostal Church, Odisha - 759129",
+    phones: ["7735755673", "9937567092", "8658085397", "6370685648"],
   },
 ];
 
@@ -18,13 +14,10 @@ export const  Other= [
 ];
 
 export const softwareDevelopmentLinks = [
-  "AI Development with Python",
-  "Frontend Development",
-  "Backend Development",
+  "Gen AI Full Stack Development",
   "Full Stack Development",
   "AI, ML and Data Science",
+  "Mobile Applicaton Development",
   "Core Java",
-  "Core Python",
-  "E2E Project Deployment",
-  "Software Testing in Selenium",
+  "Core Python"
 ];

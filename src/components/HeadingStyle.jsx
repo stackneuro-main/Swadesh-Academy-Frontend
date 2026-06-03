@@ -1,5 +1,3 @@
-export default function HeadingStyle({text}) {
-  return (
-    <h2 className=" text-black text-xl font-bold lg:text-2xl pl-3 ">{text}</h2>
-  )
+export default function HeadingStyle({ text }) {
+  return <h2 className="pl-1 text-xl font-bold text-slate-900 lg:text-2xl">{text}</h2>;
 }

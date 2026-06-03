@@ -1,40 +1,199 @@
-import { NavLink } from "react-router-dom";
-import MobileNav from "./MobileNav";
-import logo from "../../assets/Images/Untitled design (3).png";
-export default function Navbar() {
- const navItem = [
-    { name: "Home", path:"/" },
-    { name: "About", path: "/about" },
-    { name: "Courses", path: "/Courses" },
-    { name: "Contact", path: "/Contact" },
-   
-  ];
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { LogOut, UserRound } from "lucide-react";
 
-return (
-  <>
-    <nav className="shadow-md h-15 sticky top-0 z-50 bg-white ">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-3 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <div className="text-[1.3rem] flex items-center gap-1">
-        <img src={logo} alt="logo" className="h-10 w-10"></img>
-          <h1> Swadesh <span className="text-primary">Academy </span></h1>
+import logo from "../../assets/Images/swadesh-academy-logo.svg";
+import { useAuth } from "../../features/auth/useAuth";
+import MobileNav from "./MobileNav";
+
+export default function Navbar() {
+  const { isAuthenticated, signOut, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+  const navItem = [
+    { name: "Home", path: "/", scrollTarget: "top" },
+    { name: "Courses", path: "/courses" },
+    { name: "About", path: "/", scrollTarget: "about" },
+    { name: "Request a Call Back", path: "/", scrollTarget: "contact" },
+  ];
+  const navItems = user?.role === "admin" ? [...navItem, { name: "Admin", path: "/admin" }] : navItem;
+
+  const initials = (user?.name || "SA")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (!profileMenuRef.current?.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setProfileOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  function handleSignOut() {
+    setProfileOpen(false);
+    signOut();
+  }
+
+  function scrollWithOffset(targetId) {
+    if (targetId === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const navbarOffset = 96;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - navbarOffset;
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
+  }
+
+  function handleScrollNavigation(item) {
+    const nextPath = item.scrollTarget === "top" ? "/" : `/#${item.scrollTarget}`;
+    navigate(nextPath);
+    window.setTimeout(() => scrollWithOffset(item.scrollTarget), 80);
+  }
+
+  function getScrollItemClass(item) {
+    const isActive =
+      item.scrollTarget === "top"
+        ? location.pathname === "/" && !location.hash
+        : location.pathname === "/" && location.hash === `#${item.scrollTarget}`;
+
+    return isActive
+      ? "rounded-full bg-slate-900 px-4 py-2 text-white shadow-sm"
+      : "rounded-full px-4 py-2 transition hover:bg-white hover:text-primary";
+  }
+
+  return (
+    <nav className="sticky top-0 z-50 border-b border-white/50 bg-white/75 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 text-lg font-semibold text-slate-900 sm:text-xl">
+          <img
+            src={logo}
+            alt="Swadesh Academy logo"
+            className="h-12 w-auto sm:h-14"
+          />
         </div>
-{/* Desktop View Nav Items */}
+
         <div>
-          <ul className="hidden lg:flex items-center justify-center gap-9 lg:text-[1.2rem]">
-            {
-              navItem.map((item,ind)=>
-                <li key={ind}>
-                <NavLink to={item.path}>{item.name} </NavLink> </li>)}
+          <ul className="hidden items-center justify-center gap-8 text-sm font-semibold text-slate-700 lg:flex">
+            {navItems.map((item) => (
+              <li key={item.name}>
+                {item.scrollTarget ? (
+                  <button
+                    type="button"
+                    onClick={() => handleScrollNavigation(item)}
+                    className={getScrollItemClass(item)}
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "rounded-full bg-slate-900 px-4 py-2 text-white shadow-sm"
+                        : "rounded-full px-4 py-2 transition hover:bg-white hover:text-primary"
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                )}
+              </li>
+            ))}
           </ul>
-         </div>
-         <div className="lg:hidden">
-     <MobileNav navitems={navItem}></MobileNav>
-     </div>
+        </div>
+
+        <div className="hidden items-center gap-3 lg:flex">
+          {isAuthenticated ? (
+            <div ref={profileMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setProfileOpen((current) => !current)}
+                aria-haspopup="menu"
+                aria-expanded={profileOpen}
+                className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-blue-100 bg-white text-sm font-bold text-blue-700 shadow-[0_10px_24px_rgba(37,99,235,0.16)] ring-4 ring-blue-50 transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(37,99,235,0.22)]"
+              >
+                {user?.photo ? (
+                  <img src={user.photo} alt={user.name} className="h-full w-full object-cover" />
+                ) : (
+                  initials
+                )}
+              </button>
+
+              <div
+                role="menu"
+                className={`absolute right-0 top-14 w-56 origin-top-right rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_22px_55px_rgba(15,23,42,0.16)] transition duration-200 ${
+                  profileOpen
+                    ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+                    : "pointer-events-none -translate-y-2 scale-95 opacity-0"
+                }`}
+              >
+                <div className="border-b border-slate-100 px-3 py-3">
+                  <p className="truncate text-sm font-bold text-slate-950">{user?.name || "Learner"}</p>
+                  <p className="truncate text-xs text-slate-500">{user?.email || "Swadesh Academy"}</p>
+                </div>
+                <NavLink
+                  to="/profile"
+                  role="menuitem"
+                  onClick={() => setProfileOpen(false)}
+                  className="mt-2 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <UserRound size={17} />
+                  Profile
+                </NavLink>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleSignOut}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
+                >
+                  <LogOut size={17} />
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <NavLink
+              to="/profile"
+              className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-primary"
+            >
+              Login / Signup
+            </NavLink>
+          )}
+        </div>
+
+        <div className="lg:hidden">
+          <MobileNav
+            navitems={navItems}
+            isAuthenticated={isAuthenticated}
+            user={user}
+            signOut={signOut}
+            onScrollNavigate={handleScrollNavigation}
+            location={location}
+          />
+        </div>
       </div>
-       {/* mobile menu icon */}
-       
-</nav>
-</>
+    </nav>
   );
 }

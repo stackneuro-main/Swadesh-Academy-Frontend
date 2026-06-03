@@ -1,57 +1,149 @@
-import  { useState } from "react";
-import {useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ChevronDown, AlignJustify, X } from "lucide-react";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { motion } from "motion/react";
+import { AlignJustify, LogOut, UserRound, X } from "lucide-react";
 
-export default function MobileNav({ navitems }) {
+export default function MobileNav({
+  navitems,
+  isAuthenticated,
+  user,
+  signOut,
+  onScrollNavigate,
+  location,
+}) {
+  const MotionDiv = motion.div;
+  const MotionLi = motion.li;
+  const MotionButton = motion.button;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const initials = (user?.name || "SA")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
 
-  const navigate = useNavigate();
+  function closeMenu() {
+    setMobileOpen(false);
+  }
 
-return (
+  function handleSignOut() {
+    closeMenu();
+    signOut?.();
+  }
+
+  function handleScrollItem(item) {
+    closeMenu();
+    onScrollNavigate?.(item);
+  }
+
+  function getScrollItemClass(item) {
+    const isActive =
+      item.scrollTarget === "top"
+        ? location?.pathname === "/" && !location?.hash
+        : location?.pathname === "/" && location?.hash === `#${item.scrollTarget}`;
+
+    return `block w-full rounded-xl px-3 py-3 text-left font-semibold ${
+      isActive ? "bg-slate-900 text-white" : "text-slate-700"
+    }`;
+  }
+
+  return (
     <>
-
-      <motion.div
-        whileTap={{ scale: 0.8 }}
+      <MotionButton
+        type="button"
+        whileTap={{ scale: 0.9 }}
         animate={{ rotate: mobileOpen ? 90 : 0 }}
-        transition={{ duration: 0.3 }}
-        className="cursor-pointer z-30 relative"
+        transition={{ duration: 0.24, ease: "easeOut" }}
+        className="relative z-30 cursor-pointer rounded-full border border-slate-200 bg-white/80 p-2 text-slate-800 shadow-sm"
         onClick={() => setMobileOpen(!mobileOpen)}
+        aria-label="Toggle mobile navigation"
       >
-        {mobileOpen ? <X size={28} /> : <AlignJustify size={28} />}
-      </motion.div>
+        {mobileOpen ? <X size={24} /> : <AlignJustify size={24} />}
+      </MotionButton>
 
-      {/* Mobile Menu========================================================================== */}
       {mobileOpen && (
-        <motion.div
-          initial={{ x: "-100%", opacity: 0 }}
-          animate={{ x: "0%", opacity: 1 }}
-          exit={{ x: "-100%", opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="absolute left-0 top-16 px-5 w-full backdrop-blur-3xl z-20 flex flex-col gap-5"
+        <MotionDiv
+          initial={{ opacity: 0, y: -12, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.98 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="absolute left-0 top-20 z-20 flex w-full flex-col gap-5 border-b border-slate-200 bg-white px-5 py-5 shadow-xl"
         >
-          <ul className="flex flex-col gap-4">
-            {navitems.map((item, index) => (
-              <motion.li
-                key={index}
-                onTapStart={() => {
-                  if (!item.child) {
-                    navigate(item.path);
-                    setMobileOpen(false);
-                  } else {
-                    setClickCheck(prev => (prev === index ? null : index));
-                  }
-                }}
-                onTapCancel={() => setClickCheck(null)}
-                className="relative flex flex-col gap-2 cursor-pointer  hover:bg-blue-700/20 transition-all ease-in-out duration-100  p-3 rounded-xl"
+          <ul className="flex flex-col gap-2">
+            {navitems.map((item) => (
+              <MotionLi
+                key={item.name}
+                className="rounded-xl transition hover:bg-blue-50"
               >
-                <div className="flex items-center justify-between">
-                  <span>{item.name}</span>
-                  {item.child && <ChevronDown className="inline" />}
-                </div></motion.li>
+                {item.scrollTarget ? (
+                  <button
+                    type="button"
+                    onClick={() => handleScrollItem(item)}
+                    className={getScrollItemClass(item)}
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      `block rounded-xl px-3 py-3 font-semibold ${
+                        isActive ? "bg-slate-900 text-white" : "text-slate-700"
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                )}
+              </MotionLi>
             ))}
           </ul>
-</motion.div>
+
+          <div className="border-t border-slate-100 pt-4">
+            {isAuthenticated ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-50 text-sm font-bold text-blue-700">
+                    {user?.photo ? (
+                      <img src={user.photo} alt={user.name} className="h-full w-full object-cover" />
+                    ) : (
+                      initials
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-slate-950">{user?.name || "Learner"}</p>
+                    <p className="truncate text-xs text-slate-500">{user?.email || "Swadesh Academy"}</p>
+                  </div>
+                </div>
+                <NavLink
+                  to="/profile"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <UserRound size={18} />
+                  Profile
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <NavLink
+                to="/profile"
+                onClick={closeMenu}
+                className="block rounded-full bg-slate-900 px-5 py-3 text-center text-sm font-semibold text-white shadow-lg transition hover:bg-primary"
+              >
+                Login / Signup
+              </NavLink>
+            )}
+          </div>
+        </MotionDiv>
       )}
     </>
   );

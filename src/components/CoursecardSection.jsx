@@ -1,14 +1,23 @@
-import { softwareDevelopment } from "../utils/constants";
-import CourseCard from "./CourseCard";
-import HeadingStyle from "./HeadingStyle";
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { motion, useAnimation } from "motion/react";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
-import { CheckCircle2 } from 'lucide-react'; // optional icon
 
-export default function CoursecardSection({ type, heading }) {
+import CourseList from "./CourseList";
+import { useCourses } from "../features/courses/hooks/useCourses";
+
+export default function CoursecardSection({
+  type,
+  activeType,
+  onTypeChange,
+  filterOptions = [],
+  showCatalogLink = true,
+}) {
+  const MotionDiv = motion.div;
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const { data: courses = [], isLoading, isError, error } = useCourses(type);
 
   useEffect(() => {
     if (inView) {
@@ -16,79 +25,55 @@ export default function CoursecardSection({ type, heading }) {
     }
   }, [controls, inView]);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    }),
-  };
-
-  const coursetype = softwareDevelopment;
-
-  const complementaryFeatures = [
-    "💼 Real-world Projects",
-    "📝 Interview Preparation",
-    "📄 Resume Building",
-  ];
-
   return (
-    <>
+    <section ref={ref} className="space-y-6">
+      <div className="flex flex-col gap-5 rounded-[1.6rem] border border-blue-100 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.07)] backdrop-blur sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+            Courses
+          </h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => onTypeChange?.(option.value)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                  activeType === option.value
+                    ? "bg-blue-700 text-white shadow-[0_12px_28px_rgba(37,99,235,0.26)]"
+                    : "border border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-
-   {/* Neon-Glow Complementary Features with Blue Gradient */}
-<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6 px-4">
-  {complementaryFeatures.map((feature, index) => (
-    <motion.div
-      key={index}
-      custom={index}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2, duration: 0.5, ease: "easeOut" }}
-      className="relative flex items-center justify-center gap-1 group cursor-pointer bg-gradient-to-r from-blue-700 via-blue-500 to-blue-400 rounded-xl p-3 shadow-lg overflow-hidden transition-transform transform hover:-translate-y-2 hover:shadow-2xl"
-    >
-      {/* Neon Icon */}
-      <div className="">
-        <CheckCircle2 
-          size={28} 
-          className="text-white group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,1)] transition-all"
-        />
+        {showCatalogLink ? (
+          <NavLink
+            to="/courses"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700 transition duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-700 hover:text-white"
+          >
+            Explore all course catalog
+            <ArrowRight size={17} />
+          </NavLink>
+        ) : null}
       </div>
 
-      {/* Neon Text */}
-      <h3 className="text-white font-bold text-md  md:text-lg text-center  transition-all">
-        {feature}
-      </h3>
-
-      {/* Neon hover glow overlay */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity rounded-xl"></div>
-    </motion.div>
-  ))}
-</div>
-
-  
-
-    <motion.div
-      className="mt-2"
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={cardVariants}
-    >
-   <HeadingStyle text={heading} />
-
-      {/* Course Cards */}
-      <div className="grid place-content-center gap-6 p-6 md:grid-cols-3 lg:grid-cols-4">
-        {coursetype.map((courseinfo, ind) => (
-          <CourseCard key={ind} courseinfo={courseinfo} />
-        ))}
-      </div>
-    </motion.div>
-    </>
+      <MotionDiv
+        initial={{ opacity: 0, y: 32 }}
+        animate={controls}
+        variants={{
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.45, ease: "easeOut" },
+          },
+        }}
+      >
+        <CourseList courses={courses} isLoading={isLoading} isError={isError} error={error} />
+      </MotionDiv>
+    </section>
   );
 }
