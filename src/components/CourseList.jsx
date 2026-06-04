@@ -30,6 +30,7 @@ function CourseCardSkeleton() {
 export default function CourseList({ courses = [], isLoading, isError, error }) {
   const trackRef = useRef(null);
   const rafRef = useRef(null);
+  const courseItems = Array.isArray(courses) ? courses : [];
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -75,7 +76,7 @@ export default function CourseList({ courses = [], isLoading, isError, error }) 
         window.cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [courses.length, isLoading, scheduleScrollButtonUpdate, updateScrollButtons]);
+  }, [courseItems.length, isLoading, scheduleScrollButtonUpdate, updateScrollButtons]);
 
   if (isLoading) {
     return (
@@ -100,7 +101,7 @@ export default function CourseList({ courses = [], isLoading, isError, error }) 
     );
   }
 
-  if (courses.length === 0) {
+  if (courseItems.length === 0) {
     return (
       <EmptyState
         title="No courses available"
@@ -126,7 +127,7 @@ export default function CourseList({ courses = [], isLoading, isError, error }) 
         onScroll={scheduleScrollButtonUpdate}
         className="course-carousel-track"
       >
-        {courses.map((course) => (
+        {courseItems.map((course) => (
           <div key={course.id} className="course-carousel-slide">
             <CourseCard courseinfo={course} />
           </div>

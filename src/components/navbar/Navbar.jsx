@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, UserRound } from "lucide-react";
 
-import logo from "../../assets/Images/swadesh-academy-logo.svg";
+import logo from "../../assets/Images/Swadesh Academy new logo.png";
 import { useAuth } from "../../features/auth/useAuth";
 import MobileNav from "./MobileNav";
 

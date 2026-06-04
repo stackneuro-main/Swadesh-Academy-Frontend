@@ -72,7 +72,9 @@ export default function SocialProofSection() {
       return [];
     }
 
-    return [data.youtube, data.instagram];
+    return [data.youtube, data.instagram].filter(
+      (item) => item && typeof item === "object" && item.platform,
+    );
   }, [data]);
 
   return (
@@ -82,7 +84,7 @@ export default function SocialProofSection() {
 
       {!isLoading && !isError
         ? items.map((item) => {
-            const Icon = iconMap[item.platform];
+            const Icon = iconMap[item.platform] || ArrowUpRight;
 
             return (
               <a

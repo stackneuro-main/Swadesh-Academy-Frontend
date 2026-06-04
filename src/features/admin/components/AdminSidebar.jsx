@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 
-import logo from "../../../assets/Images/swadesh-academy-logo.svg";
+import logo from "../../../assets/Images/Swadesh Academy new logo.png";
 
 const iconMap = {
   dashboard: LayoutDashboard,
