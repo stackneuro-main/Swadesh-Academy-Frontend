@@ -231,7 +231,7 @@ export default function CourseCard({ courseinfo }) {
           </div>
 
           <NavLink
-            to={`/enroll?courseId=${courseinfo.id}`}
+            to={detailPath}
             onClick={(event) => event.stopPropagation()}
             className="mt-2.5 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 text-sm font-bold text-white shadow-[0_14px_28px_rgba(29,78,216,0.24)] transition hover:-translate-y-0.5 hover:bg-blue-800"
           >

@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function Button({ name, styleType, link }) {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 text-center text-sm font-semibold shadow-md transition duration-300";
+    "inline-flex w-full items-center justify-center gap-2 rounded-full border px-5 py-3 text-center text-sm font-semibold shadow-md transition duration-300 sm:w-auto";
   const dynamicStyle =
     styleType === "primary"
       ? "border-primary bg-primary text-white hover:-translate-y-0.5 hover:bg-white hover:text-primary"

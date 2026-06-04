@@ -17,13 +17,13 @@ const metrics = [
 
 export default function HeroSection({ text1, text2 }) {
   return (
-    <section className="relative overflow-hidden rounded-[2.5rem] border border-slate-800/50 bg-slate-950 px-6 py-8 text-white shadow-[0_30px_80px_rgba(15,23,42,0.28)] lg:px-10 lg:py-12">
+    <section className="relative overflow-hidden rounded-[1.5rem] border border-slate-800/50 bg-slate-950 px-4 py-7 text-white shadow-[0_30px_80px_rgba(15,23,42,0.28)] sm:rounded-[2rem] sm:px-6 sm:py-9 lg:px-8 xl:rounded-[2.5rem] xl:px-10 xl:py-12">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.32),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.18),transparent_26%)]" />
       <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent)] lg:block" />
 
-      <div className="relative grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,1.02fr)]">
-        <div className="flex flex-col justify-center gap-6">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-blue-100 backdrop-blur">
+      <div className="relative grid items-center gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] xl:gap-10">
+        <div className="flex min-w-0 flex-col justify-center gap-6">
+          <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-100 backdrop-blur sm:px-4 sm:text-xs sm:tracking-[0.24em]">
             <Sparkles size={14} className="text-orange-300" />
             Your all-in-one learning platform
           </div>
@@ -32,7 +32,7 @@ export default function HeroSection({ text1, text2 }) {
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">
               Swadesh Academy
             </p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-heading font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 max-w-3xl font-heading text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl xl:text-6xl">
               {text1}
               <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-orange-300 bg-clip-text text-transparent">
                 {text2}
@@ -44,11 +44,11 @@ export default function HeroSection({ text1, text2 }) {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {highlights.map((item) => (
               <div
                 key={item}
-                className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:bg-white/12 hover:text-white hover:shadow-[0_16px_34px_rgba(34,211,238,0.16)]"
+                className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:bg-white/12 hover:text-white hover:shadow-[0_16px_34px_rgba(34,211,238,0.16)] sm:px-4 sm:text-sm"
               >
                 <BadgeCheck size={16} className="text-blue-300 transition duration-300 group-hover:scale-110 group-hover:text-cyan-200" />
                 {item}

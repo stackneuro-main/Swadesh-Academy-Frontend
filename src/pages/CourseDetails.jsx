@@ -39,7 +39,7 @@ function formatCourseDate(dateValue) {
 
   return new Intl.DateTimeFormat("en-IN", {
     day: "2-digit",
-    month: "short",
+    month: "2-digit",
     year: "numeric",
     timeZone: "UTC",
   }).format(date);
@@ -117,7 +117,7 @@ export default function CourseDetails() {
   const curriculumItems = Array.isArray(course.curriculum_items) ? course.curriculum_items : [];
   const prerequisites = Array.isArray(course.prerequisites) ? course.prerequisites : [];
   const youtubeEmbedUrl = getYouTubeEmbedUrl(course.intro_video_url);
-  const allCourses = coursesQuery.data || [];
+  const allCourses = Array.isArray(coursesQuery.data) ? coursesQuery.data : [];
   const relatedCourses = allCourses
     .filter((item) => {
       if (item.id === course.id) return false;
@@ -127,7 +127,7 @@ export default function CourseDetails() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[1.75rem] border border-slate-800/40 bg-[radial-gradient(circle_at_72%_32%,rgba(37,99,235,0.36),transparent_24%),linear-gradient(135deg,#020617_0%,#071737_52%,#111027_100%)] p-5 text-white shadow-[0_30px_90px_rgba(15,23,42,0.28)] sm:p-7">
+      <div className="rounded-[1.35rem] border border-slate-800/40 bg-[radial-gradient(circle_at_72%_32%,rgba(37,99,235,0.36),transparent_24%),linear-gradient(135deg,#020617_0%,#071737_52%,#111027_100%)] p-4 text-white shadow-[0_30px_90px_rgba(15,23,42,0.28)] sm:rounded-[1.75rem] sm:p-7">
         <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
           <Link to="/" className="inline-flex items-center gap-2 transition hover:text-white">
             <Home size={17} />
@@ -139,19 +139,19 @@ export default function CourseDetails() {
           <span className="text-white">{course.title}</span>
         </div>
 
-        <div className="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_440px]">
+        <div className="mt-7 grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] 2xl:grid-cols-[minmax(0,1fr)_460px]">
           <div className="min-w-0">
             <span className="inline-flex rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-[0_12px_28px_rgba(37,99,235,0.3)]">
               {course.category?.name || "Course"}
             </span>
-            <h1 className="mt-5 max-w-4xl font-heading text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 max-w-4xl font-heading text-3xl font-black leading-tight tracking-tight sm:text-5xl xl:text-6xl">
               {course.title}
             </h1>
-            <p className="mt-5 max-w-3xl whitespace-pre-line text-base leading-8 text-slate-200">
+            <p className="mt-5 max-w-3xl whitespace-pre-line text-sm leading-7 text-slate-200 sm:text-base sm:leading-8">
               {course.short_description || course.description}
             </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-4 text-sm font-semibold text-slate-200">
+            <div className="mt-7 flex flex-wrap items-center gap-3 text-sm font-semibold text-slate-200 sm:gap-4">
               <span className="inline-flex items-center gap-2">
                 <Star size={18} className="fill-amber-300 text-amber-300" />
                 {Number(course.rating || 4.8).toFixed(1)} Rating
@@ -168,7 +168,7 @@ export default function CourseDetails() {
               </span>
             </div>
 
-            <div className="mt-8 grid max-w-4xl overflow-hidden rounded-2xl border border-white/12 bg-white/8 text-sm backdrop-blur sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-8 grid max-w-4xl overflow-hidden rounded-2xl border border-white/12 bg-white/8 text-sm backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { label: "Duration", value: course.duration, icon: CalendarCheck2 },
                 { label: "Start Date", value: formatCourseDate(course.start_date), icon: CalendarDays },
@@ -183,7 +183,7 @@ export default function CourseDetails() {
                   >
                     <Icon size={24} className="shrink-0 text-blue-300 transition duration-300 group-hover/stat:scale-110 group-hover/stat:text-cyan-200" />
                     <div className="min-w-0">
-                      <p className="truncate text-lg font-bold text-white transition group-hover/stat:text-cyan-100">{item.value}</p>
+                      <p className="break-words text-lg font-bold leading-tight text-white transition group-hover/stat:text-cyan-100">{item.value}</p>
                       <p className="text-slate-300 transition group-hover/stat:text-white">{item.label}</p>
                     </div>
                   </div>
@@ -192,7 +192,7 @@ export default function CourseDetails() {
             </div>
           </div>
 
-          <aside className="rounded-[1.5rem] border border-white/10 bg-white/8 p-4 backdrop-blur">
+          <aside className="rounded-[1.35rem] border border-white/10 bg-white/8 p-4 backdrop-blur sm:rounded-[1.5rem] xl:self-start">
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950">
               {youtubeEmbedUrl ? (
                 <iframe
@@ -244,9 +244,9 @@ export default function CourseDetails() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_390px]">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
         <div className="space-y-6">
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-[1.35rem] border border-slate-200 bg-white p-5 shadow-sm sm:rounded-[1.5rem] sm:p-6">
             <div className="flex items-center gap-3">
               <BookOpen size={26} className="text-blue-700" />
               <h2 className="font-heading text-2xl font-bold text-slate-950">Course Description</h2>
@@ -258,7 +258,7 @@ export default function CourseDetails() {
               <h3 className="font-heading text-xl font-bold text-slate-950">Course Curriculum</h3>
             </div>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               {(curriculumItems.length ? curriculumItems : [
                 "Strong fundamentals and practical workflows",
                 "Project-oriented learning with mentor support",
@@ -277,7 +277,7 @@ export default function CourseDetails() {
           </section>
         </div>
 
-        <aside className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <aside className="rounded-[1.35rem] border border-slate-200 bg-white p-5 shadow-sm sm:rounded-[1.5rem] sm:p-6 xl:self-start">
           <h2 className="font-heading text-2xl font-bold text-slate-950">This Course Includes</h2>
           <div className="mt-5 grid gap-4">
             {benefitItems.map((item) => {
@@ -316,7 +316,7 @@ export default function CourseDetails() {
         </aside>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-[1.35rem] border border-slate-200 bg-white p-5 shadow-sm sm:rounded-[1.5rem] sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-blue-700">Related Courses</p>

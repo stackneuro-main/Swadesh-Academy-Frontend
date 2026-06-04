@@ -165,6 +165,10 @@ body {
   transition-property: color, background-color, border-color, box-shadow, transform, opacity;
 }
 
+.hero-orbit {
+  contain: layout paint;
+}
+
 .hero-tech-node {
   animation: heroNodeFloat 9s ease-in-out infinite;
   will-change: transform;
@@ -172,6 +176,7 @@ body {
 
 .hero-tech-chip {
   animation: heroNodeRotate 18s linear infinite;
+  transform: translateZ(0);
 }
 
 .hero-orbit-core {
@@ -396,6 +401,18 @@ body {
 }
 
 @media (max-width: 640px) {
+  .hero-tech-node {
+    animation-duration: 11s;
+  }
+
+  .hero-tech-chip {
+    max-width: calc(100vw - 5rem);
+  }
+
+  .hero-code-particle:nth-child(n + 9) {
+    display: none;
+  }
+
   .benefits-track {
     animation-duration: 34s;
   }
