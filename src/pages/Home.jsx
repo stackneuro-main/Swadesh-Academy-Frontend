@@ -9,6 +9,7 @@ import HeroSection from "../components/HeroSection";
 import StudentTrustSection from "../components/StudentTrustSection";
 import StudentReviewsSection from "../components/StudentReviewsSection";
 import CoursecardSection from "../components/CoursecardSection";
+import { scrollToSection } from "../utils/scrollToSection";
 
 const Contact = lazy(() => import("./Contact"));
 const Cirtificate = lazy(() => import("./Ceritifiactepage"));
@@ -29,25 +30,7 @@ export default function Hero() {
     }
 
     const targetId = location.hash.replace("#", "");
-    let attempts = 0;
-
-    function scrollToHashTarget() {
-      const target = document.getElementById(targetId);
-
-      if (target) {
-        const navbarOffset = 96;
-        const targetTop = target.getBoundingClientRect().top + window.scrollY - navbarOffset;
-        window.scrollTo({ top: targetTop, behavior: "smooth" });
-        return;
-      }
-
-      attempts += 1;
-      if (attempts < 20) {
-        window.setTimeout(scrollToHashTarget, 80);
-      }
-    }
-
-    scrollToHashTarget();
+    scrollToSection(targetId);
   }, [location.hash]);
 
   return (

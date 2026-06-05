@@ -10,6 +10,7 @@ export default function MobileNav({
   signOut,
   onScrollNavigate,
   location,
+  activeScrollTarget,
 }) {
   const MotionDiv = motion.div;
   const MotionLi = motion.li;
@@ -37,10 +38,7 @@ export default function MobileNav({
   }
 
   function getScrollItemClass(item) {
-    const isActive =
-      item.scrollTarget === "top"
-        ? location?.pathname === "/" && !location?.hash
-        : location?.pathname === "/" && location?.hash === `#${item.scrollTarget}`;
+    const isActive = location?.pathname === "/" && activeScrollTarget === item.scrollTarget;
 
     return `block w-full rounded-xl px-3 py-3 text-left font-semibold ${
       isActive ? "bg-slate-900 text-white" : "text-slate-700"

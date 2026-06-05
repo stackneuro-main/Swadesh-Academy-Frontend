@@ -1,5 +1,7 @@
 import { ArrowRight, PhoneCall, UsersRound } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { scrollToSection } from "../utils/scrollToSection";
 
 const studentTrustStats = {
   totalStudents: "500+",
@@ -9,6 +11,13 @@ const studentTrustStats = {
 };
 
 export default function StudentTrustSection() {
+  const navigate = useNavigate();
+
+  function handleCallbackClick() {
+    navigate("/#contact");
+    window.setTimeout(() => scrollToSection("contact"), 80);
+  }
+
   return (
     <section className="rounded-[2rem] border border-slate-200/70 bg-white/88 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -36,13 +45,14 @@ export default function StudentTrustSection() {
             Enroll Now
             <ArrowRight size={16} />
           </NavLink>
-          <NavLink
-            to="/#contact"
+          <button
+            type="button"
+            onClick={handleCallbackClick}
             className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-[0_14px_35px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:border-orange-300 hover:text-orange-600 hover:shadow-[0_20px_45px_rgba(249,115,22,0.18)]"
           >
             Request a Call Back
             <PhoneCall size={16} />
-          </NavLink>
+          </button>
         </div>
       </div>
     </section>

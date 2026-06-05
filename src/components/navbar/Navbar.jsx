@@ -4,13 +4,18 @@ import { LogOut, UserRound } from "lucide-react";
 
 import logo from "../../assets/Images/Swadesh Academy new logo.png";
 import { useAuth } from "../../features/auth/useAuth";
+import { scrollToSection } from "../../utils/scrollToSection";
 import MobileNav from "./MobileNav";
+
+const scrollNavTargets = ["top", "about", "contact"];
+const activeScrollOffset = 120;
 
 export default function Navbar() {
   const { isAuthenticated, signOut, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [activeScrollTarget, setActiveScrollTarget] = useState("top");
   const profileMenuRef = useRef(null);
   const navItem = [
     { name: "Home", path: "/", scrollTarget: "top" },
@@ -48,36 +53,77 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setActiveScrollTarget("");
+      return undefined;
+    }
+
+    let frameId = 0;
+
+    function updateActiveSection() {
+      frameId = 0;
+      const currentPosition = window.scrollY + activeScrollOffset;
+      let nextActiveTarget = "top";
+
+      scrollNavTargets.forEach((targetId) => {
+        if (targetId === "top") {
+          return;
+        }
+
+        const target = document.getElementById(targetId);
+        if (!target) {
+          return;
+        }
+
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
+        if (currentPosition >= targetTop) {
+          nextActiveTarget = targetId;
+        }
+      });
+
+      setActiveScrollTarget((current) =>
+        current === nextActiveTarget ? current : nextActiveTarget,
+      );
+    }
+
+    function scheduleActiveSectionUpdate() {
+      if (frameId) {
+        return;
+      }
+
+      frameId = window.requestAnimationFrame(updateActiveSection);
+    }
+
+    updateActiveSection();
+    const delayedUpdateId = window.setTimeout(updateActiveSection, 500);
+    window.addEventListener("scroll", scheduleActiveSectionUpdate, { passive: true });
+    window.addEventListener("resize", scheduleActiveSectionUpdate);
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+      window.clearTimeout(delayedUpdateId);
+      window.removeEventListener("scroll", scheduleActiveSectionUpdate);
+      window.removeEventListener("resize", scheduleActiveSectionUpdate);
+    };
+  }, [location.pathname]);
+
   function handleSignOut() {
     setProfileOpen(false);
     signOut();
   }
 
-  function scrollWithOffset(targetId) {
-    if (targetId === "top") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    const navbarOffset = 96;
-    const targetTop = target.getBoundingClientRect().top + window.scrollY - navbarOffset;
-    window.scrollTo({ top: targetTop, behavior: "smooth" });
-  }
-
   function handleScrollNavigation(item) {
     const nextPath = item.scrollTarget === "top" ? "/" : `/#${item.scrollTarget}`;
+    setActiveScrollTarget(item.scrollTarget);
     navigate(nextPath);
-    window.setTimeout(() => scrollWithOffset(item.scrollTarget), 80);
+    window.setTimeout(() => scrollToSection(item.scrollTarget), 80);
   }
 
   function getScrollItemClass(item) {
-    const isActive =
-      item.scrollTarget === "top"
-        ? location.pathname === "/" && !location.hash
-        : location.pathname === "/" && location.hash === `#${item.scrollTarget}`;
+    const isActive = location.pathname === "/" && activeScrollTarget === item.scrollTarget;
 
     return isActive
       ? "rounded-full bg-slate-900 px-4 py-2 text-white shadow-sm"
@@ -191,6 +237,7 @@ export default function Navbar() {
             signOut={signOut}
             onScrollNavigate={handleScrollNavigation}
             location={location}
+            activeScrollTarget={activeScrollTarget}
           />
         </div>
       </div>
